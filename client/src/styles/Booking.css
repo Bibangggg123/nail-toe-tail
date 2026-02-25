@@ -1,0 +1,483 @@
+.booking-page {
+  width: 100%;
+  min-height: calc(100vh - 200px);
+  font-family: 'Segoe UI', sans-serif;
+}
+.booking-header {
+  background: linear-gradient(rgba(0, 0, 0, 0.45), rgba(0, 0, 0, 0.45)),
+              url('../images/images17.jpg') center center / cover no-repeat;
+  color: white;
+  padding: 60px 2rem;
+  text-align: center;
+}
+
+.booking-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.5);
+}
+
+.booking-header p {
+  font-size: 1.1rem;
+  opacity: 0.95;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.4);
+}
+.success-message {
+  background: #e8f5e9;
+  color: #2e7d32;
+  border: 1px solid #a5d6a7;
+  border-radius: 10px;
+  padding: 1rem 1.5rem;
+  text-align: center;
+  font-weight: 600;
+  margin: 1.5rem auto;
+  max-width: 600px;
+  font-size: 1rem;
+}
+
+.booking-container {
+  max-width: 680px;
+  margin: 2rem auto;
+  padding: 0 1.5rem 3rem;
+}
+
+/* Progress Steps */
+.booking-progress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+  gap: 0;
+}
+
+.progress-step {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.progress-step span {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: #f5d5e3;
+  color: #d98ba4;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  transition: all 0.3s;
+  border: 2px solid #f5d5e3;
+}
+
+.progress-step.active span {
+  background: linear-gradient(135deg, #e91e8c, #c2185b);
+  color: #fff;
+  border-color: #c2185b;
+  box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3);
+}
+
+.progress-step p {
+  font-size: 0.72rem;
+  color: #b08898;
+  font-weight: 600;
+  text-align: center;
+  width: 80px;
+}
+
+.progress-step.active p {
+  color: #c2185b;
+}
+
+.progress-line {
+  width: 60px;
+  height: 3px;
+  background: #f5d5e3;
+  margin: 0 4px;
+  margin-bottom: 22px;
+  border-radius: 2px;
+  transition: background 0.3s;
+}
+
+.progress-line.active {
+  background: linear-gradient(90deg, #e91e8c, #c2185b);
+}
+
+/* Form */
+.booking-form {
+  background: #fff;
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 4px 24px rgba(194, 24, 91, 0.08);
+  border: 1px solid #fce4ec;
+}
+
+.form-step h2 {
+  font-size: 1.4rem;
+  color: #880e4f;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 2px solid #fce4ec;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: #555;
+  margin-bottom: 0.4rem;
+}
+
+.form-group input,
+.form-group select,
+.form-group textarea {
+  width: 100%;
+  padding: 0.7rem 1rem;
+  border: 1.5px solid #f5d5e3;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  color: #333;
+  background: #fff;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  outline: none;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group select:focus,
+.form-group textarea:focus {
+  border-color: #c2185b;
+  box-shadow: 0 0 0 3px rgba(194, 24, 91, 0.1);
+}
+
+.field-error {
+  color: #c62828;
+  font-size: 0.82rem;
+  margin-top: 0.4rem;
+  font-weight: 500;
+}
+
+.slots-remaining {
+  color: #2e7d32;
+  font-size: 0.82rem;
+  margin-top: 0.4rem;
+  font-weight: 600;
+}
+
+/* Specialist Cards */
+.specialist-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.specialist-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.85rem 1rem;
+  border: 2px solid #f5d5e3;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: #fff;
+}
+
+.specialist-card:hover {
+  border-color: #d98ba4;
+  background: #fff9fb;
+}
+
+.specialist-card.selected {
+  border-color: #c2185b;
+  background: #fff0f5;
+  box-shadow: 0 2px 10px rgba(194, 24, 91, 0.15);
+}
+
+.spec-avatar {
+  font-size: 2.2rem;
+}
+
+.spec-info {
+  flex: 1;
+}
+
+.spec-name {
+  font-weight: 700;
+  color: #880e4f;
+  font-size: 0.95rem;
+}
+
+.spec-role {
+  font-size: 0.78rem;
+  color: #9e7788;
+  margin-top: 2px;
+}
+
+.spec-check {
+  color: #c2185b;
+  font-weight: 700;
+  font-size: 1.1rem;
+}
+
+/* Time Slots */
+.time-slots-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.6rem;
+  margin-top: 0.5rem;
+}
+
+.time-slot-btn {
+  padding: 0.55rem 0.4rem;
+  border-radius: 10px;
+  font-size: 0.82rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  transition: all 0.2s;
+  text-align: center;
+}
+
+.time-slot-btn.free {
+  background: #e8f5e9;
+  border-color: #a5d6a7;
+  color: #2e7d32;
+}
+
+.time-slot-btn.free:hover {
+  background: #c8e6c9;
+  transform: scale(1.04);
+}
+
+.time-slot-btn.free.selected {
+  background: linear-gradient(135deg, #e91e8c, #c2185b);
+  border-color: #c2185b;
+  color: #fff;
+  box-shadow: 0 2px 8px rgba(194, 24, 91, 0.3);
+}
+
+.time-slot-btn.booked {
+  background: #ffebee;
+  border-color: #ef9a9a;
+  color: #b71c1c;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+
+.time-legend {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 0.75rem;
+  font-size: 0.8rem;
+}
+
+.legend-free  { color: #2e7d32; font-weight: 600; }
+.legend-booked { color: #b71c1c; font-weight: 600; }
+
+/* Summary */
+.appointment-summary {
+  background: #fff9fb;
+  border: 1px solid #fce4ec;
+  border-radius: 14px;
+  padding: 1.25rem;
+  margin-top: 1.5rem;
+}
+
+.appointment-summary h3 {
+  font-size: 1rem;
+  color: #880e4f;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.summary-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  font-size: 0.88rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid #fce4ec;
+  gap: 1rem;
+}
+
+.summary-row:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.summary-label {
+  color: #9e7788;
+  font-weight: 600;
+  flex-shrink: 0;
+  min-width: 100px;
+}
+
+.summary-value {
+  color: #333;
+  font-weight: 500;
+  text-align: right;
+}
+
+/* Form Buttons */
+.form-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 0.75rem 2rem;
+  border: none;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #e91e8c, #c2185b);
+  color: #fff;
+  box-shadow: 0 4px 15px rgba(194, 24, 91, 0.35);
+}
+
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(194, 24, 91, 0.45);
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 2px solid #c2185b;
+  color: #c2185b;
+}
+
+.btn-secondary:hover {
+  background: #c2185b;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .booking-header h1 { font-size: 1.8rem; }
+  .booking-form { padding: 1.25rem; }
+  .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+  .progress-line { width: 30px; }
+  .form-buttons { flex-direction: column; }
+  .btn { width: 100%; text-align: center; }
+}
+/* Home Service Active Banner */
+.hs-active-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  background: linear-gradient(135deg, #fff0f5, #fce4ec);
+  border: 1.5px solid #f48fb1;
+  border-radius: 14px;
+  padding: 1rem 1.5rem;
+  margin: 1.25rem auto;
+  max-width: 680px;
+  font-size: 0.88rem;
+}
+
+.hs-active-banner > span {
+  font-size: 1.8rem;
+  flex-shrink: 0;
+}
+
+.hs-active-banner > div {
+  flex: 1;
+}
+
+.hs-banner-title {
+  font-weight: 700;
+  color: #880e4f;
+  font-size: 0.9rem;
+  margin-bottom: 0.2rem;
+}
+
+.hs-banner-services {
+  color: #555;
+  font-size: 0.82rem;
+  margin-bottom: 0.2rem;
+}
+
+.hs-banner-addr {
+  color: #9e7788;
+  font-size: 0.78rem;
+}
+
+.hs-banner-total {
+  font-weight: 800;
+  color: #c2185b;
+  font-size: 1rem;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+/* Home Service Services Recap (Step 2) */
+.hs-services-recap {
+  background: #fff9fb;
+  border: 1.5px solid #f5d5e3;
+  border-radius: 12px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.hs-recap-title {
+  font-weight: 700;
+  color: #880e4f;
+  font-size: 0.9rem;
+  margin-bottom: 0.75rem;
+}
+
+.hs-recap-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.hs-recap-item {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #444;
+}
+
+.hs-recap-item.muted {
+  color: #9e7788;
+  font-size: 0.8rem;
+}
+
+.hs-recap-item.total {
+  font-weight: 800;
+  color: #880e4f;
+  font-size: 0.95rem;
+}
+
+.hs-recap-divider {
+  height: 1px;
+  background: #fce4ec;
+  margin: 0.4rem 0;
+}

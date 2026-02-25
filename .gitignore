@@ -1,0 +1,25 @@
+node_modules/
+npm-debug.log
+.env
+.DS_Store
+*.pyc
+__pycache__/
+build/
+dist/
+.idea/
+.vscode/settings.json
+client/build/
+client/.env.local
+
+# Environment variables
+.env.local
+.env.*.local
+
+# Logs
+logs/
+*.log
+
+# Dependencies
+/node_modules
+yarn.lock
+package-lock.json

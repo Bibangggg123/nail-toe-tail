@@ -1,0 +1,19 @@
+{
+  "name": "nail-salon-booking",
+  "version": "1.0.0",
+  "description": "Nail Salon Appointment Booking System",
+  "main": "server/server.js",
+  "scripts": {
+    "install-all": "npm install && cd client && npm install && cd ../server && npm install",
+    "start": "concurrently \"cd client && npm start\" \"cd server && npm start\"",
+    "server": "cd server && npm start",
+    "client": "cd client && npm start",
+    "build": "cd client && npm run build"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "concurrently": "^8.2.0"
+  }
+}
