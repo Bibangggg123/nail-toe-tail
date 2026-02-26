@@ -136,8 +136,16 @@ function Booking({ saveAppointment, setCurrentPage, appointments }) {
         });
       }
 
+      // Store the just-booked appointment info for Calendar to auto-open
+      localStorage.setItem('justBooked', JSON.stringify({
+        date: formData.date,
+        time: formData.time,
+        name: formData.name
+      }));
+
       setSuccess(true);
-      setTimeout(() => setCurrentPage('appointments'), 2500);
+      // Redirect to calendar so client can see their booked slot
+      setTimeout(() => setCurrentPage('calendar'), 2500);
 
     } else {
       setStep(s => s + 1);

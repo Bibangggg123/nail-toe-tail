@@ -1,143 +1,33 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React from 'react';
 import '../styles/Home.css';
 
-import img1  from '../images/images1.jpg';
-import img2  from '../images/images2.jpg';
-import img3  from '../images/images3.jpg';
-import img4  from '../images/images4.jpg';
-import img5  from '../images/images5.jpg';
-import img6  from '../images/images6.jpg';
-import img7  from '../images/images7.jpg';
-import img8  from '../images/images8.jpg';
-import img9  from '../images/images9.jpg';
-import img10 from '../images/images10.jpg';
-import img11 from '../images/images11.jpg';
-import img12 from '../images/images12.jpg';
-import img13 from '../images/images13.jpg';
-import img14 from '../images/images14.jpg';
-import img15 from '../images/images15.jpg';
-import img16 from '../images/images16.jpg';
-import img18 from '../images/images18.jpg';
-import img19 from '../images/images19.jpg';
+// Data
+import { nailDesignImages, teamPreview, serviceCards } from '../data/images';
 
-import imgManicure      from '../images/manicure.jpg';
-import imgNailDesign    from '../images/nail_design.jpg';
-import imgPedicure      from '../images/Pedicure.jpg';
-import imgNailArt       from '../images/nailArt.jpg';
-import imgNailGel       from '../images/NailGel.jpg';
-import imgNailCare      from '../images/nail_care.jpg';
-import imgNailExtension from '../images/NailExtension.jpg';
-import imgLash          from '../images/lash.jpg';
-import imgFootSpa       from '../images/foot_spa.jpg';
+// Components
+import ServiceCard from '../components/ServiceCard';
+import TeamCard from '../components/TeamCard';
+import Feature from '../components/Feature';
 
-const nailDesignImages = [
-  { id: 1,  src: img1,  alt: 'Nail Design 1' },
-  { id: 2,  src: img2,  alt: 'Nail Design 2' },
-  { id: 3,  src: img3,  alt: 'Nail Design 3' },
-  { id: 4,  src: img4,  alt: 'Nail Design 4' },
-  { id: 5,  src: img5,  alt: 'Nail Design 5' },
-  { id: 6,  src: img6,  alt: 'Nail Design 6' },
-  { id: 7,  src: img7,  alt: 'Nail Design 7' },
-  { id: 8,  src: img8,  alt: 'Nail Design 8' },
-  { id: 9,  src: img9,  alt: 'Nail Design 9' },
-  { id: 10, src: img10, alt: 'Nail Design 10' },
-  { id: 11, src: img11, alt: 'Nail Design 11' },
-  { id: 12, src: img12, alt: 'Nail Design 12' },
-  { id: 13, src: img13, alt: 'Nail Design 13' },
-  { id: 14, src: img14, alt: 'Nail Design 14' },
-  { id: 15, src: img15, alt: 'Nail Design 15' },
-  { id: 16, src: img16, alt: 'Nail Design 16' },
-];
+// Hooks
+import useCarousel from '../hooks/useCarousel';
+import useImageModal from '../hooks/useImageModal';
 
-const teamPreview = [
-  {
-    name:        'Rose',
-    role:        'Senior Nail & Beauty Specialist',
-    rating:      4.8,
-    reviews:     245,
-    image:       img18,
-    specialties: ['Nail Design', 'Gel Nails', 'Lash Extension', 'Waxing'],
-  },
-  {
-    name:        'Pangging',
-    role:        'Beauty & Spa Specialist',
-    rating:      4.9,
-    reviews:     280,
-    image:       img19,
-    specialties: ['Pedicure', 'Lash Firm', 'Foot Spa', 'Complete Care'],
-  },
-];
-
-const serviceCards = [
-  { icon: '', title: 'Nail Design',     description: 'Beautiful custom nail art designs',     image: imgNailDesign    },
-  { icon: '', title: 'Manicure',        description: 'Professional manicure services',         image: imgManicure      },
-  { icon: '', title: 'Pedicure',        description: 'Relaxing pedicure treatment',            image: imgPedicure      },
-  { icon: '', title: 'Nail Art',        description: 'Creative and trendy nail designs',       image: imgNailArt       },
-  { icon: '', title: 'Gel Nails',       description: 'Long-lasting gel nail polish',           image: imgNailGel       },
-  { icon: '', title: 'Nail Care',       description: 'Health and maintenance services',        image: imgNailCare      },
-  { icon: '', title: 'Nail Extensions', description: 'Beautiful nail length and shape',        image: imgNailExtension },
-  { icon: '', title: 'Lash Services',   description: 'Extensions and lash lift treatments',    image: imgLash          },
-  { icon: '', title: 'Foot Spa',        description: 'Full relaxing foot spa experience',      image: imgFootSpa       },
-];
+// Constants
+const VISIBLE_COUNT = 5;
+const AUTO_PLAY_INTERVAL = 3000;
 
 function Home({ setCurrentPage }) {
-  const [carouselIndex, setCarouselIndex] = useState(0);
-  const [modalImage,    setModalImage]    = useState(null);
-  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  // Custom hooks for carousel and modal
+  const modal = useImageModal(nailDesignImages);
 
-  const visibleCount = 5;
-  const maxIndex     = nailDesignImages.length - visibleCount;
-
-  const nextSlide = useCallback(() => {
-    setCarouselIndex(prev => (prev >= maxIndex ? 0 : prev + 1));
-  }, [maxIndex]);
-
-  const prevSlide = () => {
-    setCarouselIndex(prev => (prev <= 0 ? maxIndex : prev - 1));
-  };
-
-  useEffect(() => {
-    if (!isAutoPlaying || modalImage) return;
-    const timer = setInterval(nextSlide, 3000);
-    return () => clearInterval(timer);
-  }, [isAutoPlaying, modalImage, nextSlide]);
-
-  const openModal = (image) => {
-    setModalImage(image);
-    setIsAutoPlaying(false);
-  };
-
-  const closeModal = () => {
-    setModalImage(null);
-    setIsAutoPlaying(true);
-  };
-
-  const modalPrev = useCallback((e) => {
-    if (e) e.stopPropagation();
-    setModalImage(prev => {
-      const idx = nailDesignImages.findIndex(img => img.id === prev.id);
-      return nailDesignImages[(idx - 1 + nailDesignImages.length) % nailDesignImages.length];
-    });
-  }, []);
-
-  const modalNext = useCallback((e) => {
-    if (e) e.stopPropagation();
-    setModalImage(prev => {
-      const idx = nailDesignImages.findIndex(img => img.id === prev.id);
-      return nailDesignImages[(idx + 1) % nailDesignImages.length];
-    });
-  }, []);
-
-  useEffect(() => {
-    const handleKey = (e) => {
-      if (!modalImage) return;
-      if (e.key === 'Escape')     closeModal();
-      if (e.key === 'ArrowLeft')  modalPrev();
-      if (e.key === 'ArrowRight') modalNext();
-    };
-    window.addEventListener('keydown', handleKey);
-    return () => window.removeEventListener('keydown', handleKey);
-  }, [modalImage, modalPrev, modalNext]);
+  // Carousel with auto-pause when modal is open
+  const carousel = useCarousel(
+    nailDesignImages.length,
+    VISIBLE_COUNT,
+    AUTO_PLAY_INTERVAL,
+    modal.isOpen
+  );
 
   return (
     <div className="home">
@@ -153,7 +43,10 @@ function Home({ setCurrentPage }) {
       </section>
 
       <section className="services-preview">
-        <h2>Our Services</h2>
+        <div className="services-header-clickable" onClick={() => setCurrentPage('services')}>
+          <h2>Our Services</h2>
+          <p className="services-subtitle">Browse our premium nail care offerings • <span className="view-all-link">View All Services →</span></p>
+        </div>
         <div className="services-grid-3x3">
           {serviceCards.map((svc, i) => (
             <ServiceCard
@@ -168,21 +61,23 @@ function Home({ setCurrentPage }) {
       </section>
 
       <section className="carousel-section">
-        <h2>Nail Design Gallery</h2>
-        <p className="carousel-subtitle">Click any image to preview</p>
+        <div className="carousel-header-clickable" onClick={() => setCurrentPage('gallery')}>
+          <h2>Nail Design Gallery</h2>
+          <p className="carousel-subtitle">Click any image to preview • <span className="view-all-link">View All Designs →</span></p>
+        </div>
         <div className="carousel-wrapper">
-          <button className="carousel-btn" onClick={prevSlide} aria-label="Previous">&#8249;</button>
+          <button className="carousel-btn" onClick={carousel.prev} aria-label="Previous">&#8249;</button>
           <div className="carousel-track-container">
             <div
               className="carousel-track"
-              style={{ transform: `translateX(-${carouselIndex * (100 / visibleCount)}%)` }}
+              style={{ transform: `translateX(-${carousel.currentIndex * (100 / VISIBLE_COUNT)}%)` }}
             >
               {nailDesignImages.map(img => (
                 <div
                   key={img.id}
                   className="carousel-slide"
-                  style={{ width: `${100 / visibleCount}%` }}
-                  onClick={() => openModal(img)}
+                  style={{ width: `${100 / VISIBLE_COUNT}%` }}
+                  onClick={() => modal.open(img)}
                 >
                   <img src={img.src} alt={img.alt} />
                   <div className="carousel-overlay">
@@ -193,28 +88,28 @@ function Home({ setCurrentPage }) {
               ))}
             </div>
           </div>
-          <button className="carousel-btn" onClick={nextSlide} aria-label="Next">&#8250;</button>
+          <button className="carousel-btn" onClick={carousel.next} aria-label="Next">&#8250;</button>
         </div>
         <div className="carousel-dots">
-          {Array.from({ length: maxIndex + 1 }).map((_, i) => (
+          {Array.from({ length: carousel.maxIndex + 1 }).map((_, i) => (
             <button
               key={i}
-              className={`dot ${carouselIndex === i ? 'active' : ''}`}
-              onClick={() => setCarouselIndex(i)}
+              className={`dot ${carousel.currentIndex === i ? 'active' : ''}`}
+              onClick={() => carousel.goTo(i)}
               aria-label={`Slide ${i + 1}`}
             />
           ))}
         </div>
       </section>
 
-      {modalImage && (
-        <div className="modal-backdrop" onClick={closeModal}>
+      {modal.isOpen && modal.modalImage && (
+        <div className="modal-backdrop" onClick={modal.close}>
           <div className="modal-content" onClick={e => e.stopPropagation()}>
-            <button className="modal-close" onClick={closeModal}>✕</button>
-            <button className="modal-nav modal-nav-prev" onClick={modalPrev}>&#8249;</button>
-            <img src={modalImage.src} alt={modalImage.alt} className="modal-image" />
-            <button className="modal-nav modal-nav-next" onClick={modalNext}>&#8250;</button>
-            <p className="modal-caption">{modalImage.alt}</p>
+            <button className="modal-close" onClick={modal.close}>✕</button>
+            <button className="modal-nav modal-nav-prev" onClick={modal.prev}>&#8249;</button>
+            <img src={modal.modalImage.src} alt={modal.modalImage.alt} className="modal-image" />
+            <button className="modal-nav modal-nav-next" onClick={modal.next}>&#8250;</button>
+            <p className="modal-caption">{modal.modalImage.alt}</p>
           </div>
         </div>
       )}
@@ -257,57 +152,6 @@ function Home({ setCurrentPage }) {
         </button>
       </section>
 
-    </div>
-  );
-}
-
-function ServiceCard({ icon, title, description, image }) {
-  return (
-    <div className="service-card">
-      <div className="service-card-img-wrapper">
-        <img src={image} alt={title} className="service-card-img" />
-        <div className="service-card-img-overlay" />
-      </div>
-      <div className="service-card-body">
-        <div className="service-icon">{icon}</div>
-        <h3>{title}</h3>
-        <p>{description}</p>
-      </div>
-    </div>
-  );
-}
-
-function TeamCard({ name, role, rating, reviews, image, specialties, onBook }) {
-  return (
-    <div className="team-card-preview">
-      <div className="team-photo-wrapper">
-        <img src={image} alt={name} className="team-photo" />
-      </div>
-      <h3>{name}</h3>
-      <p className="team-role">{role}</p>
-      <div className="rating">
-        {'⭐'.repeat(Math.floor(rating))}
-        <span className="rating-num">{rating}</span>
-        <span className="rating-reviews">({reviews} reviews)</span>
-      </div>
-      <div className="team-specialties">
-        {specialties.map((s, i) => (
-          <span key={i} className="team-spec-tag">{s}</span>
-        ))}
-      </div>
-      <button className="btn btn-primary team-book-btn" onClick={onBook}>
-        Book with {name}
-      </button>
-    </div>
-  );
-}
-
-function Feature({ icon, title, desc }) {
-  return (
-    <div className="feature-box">
-      <div className="feature-icon">{icon}</div>
-      <h3>{title}</h3>
-      <p>{desc}</p>
     </div>
   );
 }

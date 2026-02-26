@@ -2,6 +2,29 @@ import React, { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import '../styles/NotificationBar.css';
 
+// Service and Specialist name maps
+const SERVICES = {
+  'classic-manicure': 'Classic Manicure',
+  'russian-manicure': 'Russian Manicure',
+  'gel-manicure':     'Gel Manicure',
+  'acrylic-nails':    'Acrylic Nails',
+  'nail-art':         'Nail Art Design',
+  'ombre-gradient':   'Ombre Gradient',
+  'classic-pedicure': 'Classic Pedicure',
+  'gel-pedicure':     'Gel Pedicure',
+  'french-tips':      'French Tips',
+  'nail-repair':      'Nail Repair',
+  'lash-extension':   'Lash Extension',
+  'lash-firm':        'Lash Firm',
+  'foot-spa':         'Foot Spa',
+  'waxing':           'Waxing',
+};
+
+const SPECIALISTS = {
+  rose:     'Rose',
+  pangging: 'Pangging',
+};
+
 function NotificationBar({ appointments }) {
   const [notifications, setNotifications] = useState([]);
   const [isOpen, setIsOpen] = useState(false);
@@ -10,6 +33,11 @@ function NotificationBar({ appointments }) {
     const saved = localStorage.getItem('readNotifIds');
     return saved ? JSON.parse(saved) : [];
   });
+  
+  // Detail modal state
+  const [selectedApt, setSelectedApt] = useState(null);
+  const [showDetailModal, setShowDetailModal] = useState(false);
+  const [imageZoom, setImageZoom] = useState(null);
 
   useEffect(() => {
     const notifs = [];
@@ -114,6 +142,37 @@ function NotificationBar({ appointments }) {
     if (diff < 1440) return `${Math.floor(diff / 60)}h ago`;
     return `${Math.floor(diff / 1440)}d ago`;
   };
+  
+  // Handle notification click - open detail modal
+  const handleNotificationClick = (notif) => {
+    markOneRead(notif.id);
+    const apt = appointments.find(a => a.id === notif.aptId);
+    if (apt) {
+      setSelectedApt(apt);
+      setShowDetailModal(true);
+      setIsOpen(false);
+    }
+  };
+  
+  // Helper functions for detail modal
+  const getServiceName = (id) => SERVICES[id] || id || 'Service';
+  const getSpecialistName = (id) => SPECIALISTS[id] || id || 'Specialist';
+  
+  const formatDate = (dateStr) => {
+    if (!dateStr) return '—';
+    const date = new Date(dateStr + 'T00:00:00');
+    return date.toLocaleDateString('en-US', {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  };
+  
+  const getStatusBadge = (status) => {
+    switch(status) {
+      case 'confirmed': return <span className="detail-badge confirmed">✓ Confirmed</span>;
+      case 'cancelled': return <span className="detail-badge cancelled">✕ Cancelled</span>;
+      default: return <span className="detail-badge pending">⏳ Pending</span>;
+    }
+  };
 
   return (
     <div className="notif-wrapper">
@@ -155,7 +214,7 @@ function NotificationBar({ appointments }) {
                   <div
                     key={notif.id}
                     className={`notif-item ${notif.type} ${readIds.includes(notif.id) ? 'read' : 'unread'}`}
-                    onClick={() => markOneRead(notif.id)}
+                    onClick={() => handleNotificationClick(notif)}
                   >
                     <div className="notif-icon">{notif.icon}</div>
                     <div className="notif-body">
@@ -163,6 +222,7 @@ function NotificationBar({ appointments }) {
                       <p className="notif-message">{notif.message}</p>
                       <p className="notif-time">{formatTime(notif.time)}</p>
                     </div>
+                    <div className="notif-view-btn">View →</div>
                     {!readIds.includes(notif.id) && <div className="notif-unread-dot" />}
                   </div>
                 ))
@@ -170,6 +230,148 @@ function NotificationBar({ appointments }) {
             </div>
           </div>
         </>
+      )}
+      
+      {/* Appointment Detail Modal */}
+      {showDetailModal && selectedApt && (
+        <div className="detail-modal-overlay" onClick={() => setShowDetailModal(false)}>
+          <div className="detail-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="detail-modal-close" onClick={() => setShowDetailModal(false)}>✕</button>
+            
+            <div className="detail-modal-header">
+              <div className="detail-modal-icon">
+                {selectedApt.type === 'homeservice' ? '🏠' : '💅'}
+              </div>
+              <div>
+                <h2>
+                  {selectedApt.type === 'homeservice' ? 'Home Service Booking' : 'Salon Appointment'}
+                </h2>
+                <p className="detail-modal-subtitle">
+                  Booked {formatTime(selectedApt.createdAt)}
+                </p>
+              </div>
+              {getStatusBadge(selectedApt.status)}
+            </div>
+            
+            <div className="detail-modal-body">
+              {/* Client Information */}
+              <div className="detail-section">
+                <h3>👤 Client Information</h3>
+                <div className="detail-grid">
+                  <div className="detail-item">
+                    <span className="detail-label">Name</span>
+                    <span className="detail-value">{selectedApt.name || '—'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Phone</span>
+                    <span className="detail-value">{selectedApt.phone || '—'}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Email</span>
+                    <span className="detail-value">{selectedApt.email || '—'}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Service Details */}
+              <div className="detail-section">
+                <h3>💅 Service Details</h3>
+                <div className="detail-grid">
+                  {selectedApt.type === 'homeservice' ? (
+                    <>
+                      <div className="detail-item full-width">
+                        <span className="detail-label">Services</span>
+                        <span className="detail-value">
+                          {selectedApt.hsServiceDetails?.map(s => s.name).join(', ') || '—'}
+                        </span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-label">Service Total</span>
+                        <span className="detail-value">₱{selectedApt.serviceTotal?.toLocaleString()}.00</span>
+                      </div>
+                      <div className="detail-item">
+                        <span className="detail-label">Grand Total</span>
+                        <span className="detail-value highlight">₱{selectedApt.grandTotal?.toLocaleString()}.00</span>
+                      </div>
+                    </>
+                  ) : (
+                    <div className="detail-item">
+                      <span className="detail-label">Service</span>
+                      <span className="detail-value">{getServiceName(selectedApt.service)}</span>
+                    </div>
+                  )}
+                  <div className="detail-item">
+                    <span className="detail-label">Specialist</span>
+                    <span className="detail-value">{getSpecialistName(selectedApt.specialist)}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Schedule */}
+              <div className="detail-section">
+                <h3>📅 Schedule</h3>
+                <div className="detail-grid">
+                  <div className="detail-item">
+                    <span className="detail-label">Date</span>
+                    <span className="detail-value">{formatDate(selectedApt.date)}</span>
+                  </div>
+                  <div className="detail-item">
+                    <span className="detail-label">Time</span>
+                    <span className="detail-value">{selectedApt.time || '—'}</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Address (Home Service only) */}
+              {selectedApt.type === 'homeservice' && selectedApt.address && (
+                <div className="detail-section">
+                  <h3>📍 Address</h3>
+                  <p className="detail-address">{selectedApt.address}</p>
+                </div>
+              )}
+              
+              {/* Notes */}
+              {selectedApt.notes && (
+                <div className="detail-section">
+                  <h3>📝 Notes</h3>
+                  <p className="detail-notes">{selectedApt.notes}</p>
+                </div>
+              )}
+              
+              {/* Design Image (Home Service) */}
+              {selectedApt.imagePreview && (
+                <div className="detail-section">
+                  <h3>🎨 Nail Design Reference</h3>
+                  <div className="detail-image-wrapper">
+                    <img 
+                      src={selectedApt.imagePreview} 
+                      alt="Nail design" 
+                      className="detail-image"
+                      onClick={() => setImageZoom(selectedApt.imagePreview)}
+                    />
+                    <button 
+                      className="detail-zoom-btn"
+                      onClick={() => setImageZoom(selectedApt.imagePreview)}
+                    >
+                      🔍 View Full Size
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      )}
+      
+      {/* Image Zoom Modal */}
+      {imageZoom && (
+        <div className="image-zoom-overlay" onClick={() => setImageZoom(null)}>
+          <div className="image-zoom-content" onClick={(e) => e.stopPropagation()}>
+            <button className="image-zoom-close" onClick={() => setImageZoom(null)}>✕</button>
+            <img src={imageZoom} alt="Nail design full" className="image-zoom-img" />
+            <p className="image-zoom-caption">🎨 Client's Nail Design Reference</p>
+          </div>
+        </div>
       )}
     </div>
   );

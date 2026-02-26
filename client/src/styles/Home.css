@@ -103,6 +103,34 @@ section h2::after {
   background: #fff9fb;
 }
 
+.services-header-clickable {
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: inline-block;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.services-header-clickable:hover {
+  transform: scale(1.02);
+}
+
+.services-header-clickable:hover h2 {
+  color: #c2185b;
+}
+
+.services-subtitle {
+  color: #b08898;
+  font-size: 0.95rem;
+  margin-top: 0.5rem;
+}
+
+.services-header-clickable:hover .view-all-link {
+  color: #880e4f;
+  text-decoration: underline;
+}
+
 .services-grid-3x3 {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -179,6 +207,31 @@ section h2::after {
 /* ── Carousel ── */
 .carousel-section {
   background: #fdf6f9;
+}
+
+.carousel-header-clickable {
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: inline-block;
+}
+
+.carousel-header-clickable:hover {
+  transform: scale(1.02);
+}
+
+.carousel-header-clickable:hover h2 {
+  color: #c2185b;
+}
+
+.view-all-link {
+  color: #c2185b;
+  font-weight: 600;
+  transition: color 0.2s;
+}
+
+.carousel-header-clickable:hover .view-all-link {
+  color: #880e4f;
+  text-decoration: underline;
 }
 
 .carousel-subtitle {
