@@ -28,7 +28,6 @@ function App() {
   
   // Check role permissions
   const isAdmin = userRole === 'admin';
-  const isClient = userRole === 'client';
   
   // Handle admin login
   const handleAdminLogin = () => {
@@ -104,7 +103,7 @@ function App() {
 
   // ── Save appointment to Supabase ─────────────────────────
   const saveAppointment = async (appointment) => {
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from('appointments')
       .insert([{
         name:               appointment.name,

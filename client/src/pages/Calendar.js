@@ -124,7 +124,6 @@ function Calendar({ appointments }) {
   const days = Array.from({ length: daysInMonth }, (_, i) => i + 1);
 
   const selectedDateKey = selectedDate ? formatDateKey(selectedDate) : null;
-  const bookedTimes = selectedDateKey ? getBookedTimesForDate(selectedDateKey) : [];
   const bookingsForSelected = selectedDateKey ? getBookingsForDate(selectedDateKey) : [];
 
   // Helper functions for displaying appointment details
