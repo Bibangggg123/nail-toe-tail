@@ -173,6 +173,12 @@
     justify-content: flex-start;
     overflow-x: auto;
     padding-bottom: 0.5rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filter-buttons::-webkit-scrollbar {
+    display: none;
   }
 
   .filter-btn {

@@ -247,6 +247,7 @@ section h2::after {
   gap: 1rem;
   max-width: 1400px;
   margin: 0 auto;
+  overflow: hidden;
 }
 
 .carousel-track-container {
@@ -428,9 +429,9 @@ section h2::after {
   background: rgba(255, 255, 255, 0.12);
   border: 2px solid rgba(255, 255, 255, 0.35);
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
-  font-size: 2.2rem;
+  width: 56px;
+  height: 56px;
+  font-size: 1.8rem;
   color: #fff;
   cursor: pointer;
   display: flex;
@@ -445,8 +446,8 @@ section h2::after {
   transform: translateY(-50%) scale(1.1);
 }
 
-.modal-nav-prev { left: -70px; }
-.modal-nav-next { right: -70px; }
+.modal-nav-prev { left: -60px; }
+.modal-nav-next { right: -60px; }
 
 .modal-caption {
   color: rgba(255, 255, 255, 0.82);
@@ -636,24 +637,54 @@ section h2::after {
 
 /* ── Responsive ── */
 @media (max-width: 768px) {
+  .hero                    { padding: 3.5rem 1.5rem; min-height: 280px; }
   .hero-content h1         { font-size: 2rem; }
-  .services-grid-3x3       { grid-template-columns: repeat(2, 1fr); }
+  .hero-content p          { font-size: 1rem; }
+  section                  { padding: 3rem 1.5rem; }
+  section h2               { font-size: 1.6rem; }
+  .services-grid-3x3       { grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+  .service-card-img-wrapper{ height: 200px; }
   .features-grid           { grid-template-columns: repeat(2, 1fr); }
-  .modal-nav-prev          { left: -22px; }
-  .modal-nav-next          { right: -22px; }
+  .modal-nav               { width: 44px; height: 44px; font-size: 1.4rem; }
+  .modal-nav-prev          { left: 10px; }
+  .modal-nav-next          { right: 10px; }
   .carousel-slide img      { height: 180px; }
   .team-grid               { grid-template-columns: 1fr; gap: 1.5rem; max-width: 400px; }
   .team-card-preview       { padding: 2rem 1.5rem; }
   .team-photo              { width: 110px; height: 110px; }
+  .cta                     { padding: 3rem 1.5rem; }
+  .cta h2                  { font-size: 1.6rem; }
 }
 
 @media (max-width: 480px) {
-  .hero-content h1         { font-size: 1.6rem; }
+  .hero                    { padding: 2.5rem 1rem; min-height: 240px; }
+  .hero-content h1         { font-size: 1.5rem; }
+  .hero-content p          { font-size: 0.9rem; margin-bottom: 1.5rem; }
+  section                  { padding: 2.5rem 1rem; }
+  section h2               { font-size: 1.3rem; }
   .services-grid-3x3       { grid-template-columns: repeat(2, 1fr); gap: 0.75rem; }
   .service-card-img-wrapper{ height: 130px; }
-  .features-grid           { grid-template-columns: repeat(2, 1fr); }
-  .modal-nav-prev          { left: -14px; }
-  .modal-nav-next          { right: -14px; }
+  .service-card-body       { padding: 0.75rem 0.75rem 1rem; }
+  .service-card h3         { font-size: 0.95rem; }
+  .service-card p          { font-size: 0.78rem; }
+  .features-grid           { grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .feature-box             { padding: 1rem 0.75rem; }
+  .feature-icon            { font-size: 1.5rem; }
+  .feature-box h3          { font-size: 0.85rem; }
+  .feature-box p           { font-size: 0.72rem; }
+  .modal-nav               { width: 36px; height: 36px; font-size: 1.2rem; }
+  .modal-nav-prev          { left: 8px; }
+  .modal-nav-next          { right: 8px; }
+  .carousel-slide img      { height: 160px; }
+  .carousel-btn            { width: 36px; height: 36px; font-size: 1.4rem; }
   .team-card-preview       { padding: 1.5rem 1.25rem; }
   .team-photo              { width: 90px; height: 90px; }
+  .cta                     { padding: 2.5rem 1rem; }
+  .cta h2                  { font-size: 1.3rem; }
+}
+
+@media (max-width: 360px) {
+  .services-grid-3x3       { grid-template-columns: 1fr; max-width: 280px; margin: 0 auto; }
+  .service-card-img-wrapper{ height: 160px; }
+  .features-grid           { grid-template-columns: 1fr; max-width: 280px; margin: 0 auto; }
 }

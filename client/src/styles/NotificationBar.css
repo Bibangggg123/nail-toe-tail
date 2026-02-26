@@ -505,10 +505,17 @@
   margin-top: 1rem;
 }
 
+@media (max-width: 768px) {
+  .notif-panel {
+    width: 320px;
+    right: -40px;
+  }
+}
+
 @media (max-width: 480px) {
   .notif-panel {
-    width: 300px;
-    right: -60px;
+    width: 290px;
+    right: -20px;
   }
   
   .detail-modal {

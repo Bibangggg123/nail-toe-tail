@@ -446,12 +446,28 @@
   .hs-header h1 {
     font-size: 1.8rem;
   }
+  .hs-steps-banner {
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+  }
+  .hs-step-label {
+    font-size: 0.72rem;
+  }
 }
 
 @media (max-width: 480px) {
-  .hs-header h1 { font-size: 1.5rem; }
-  .hs-card { padding: 1.1rem; }
-  .hs-services-list { max-height: 320px; }
+  .hs-header { padding: 30px 1rem; }
+  .hs-header h1 { font-size: 1.4rem; }
+  .hs-header p { font-size: 0.9rem; }
+  .hs-card { padding: 1rem; }
+  .hs-services-list { max-height: 300px; }
+  .hs-info-item { padding: 0.75rem 1rem; font-size: 0.82rem; }
+  .hs-steps-banner { gap: 0.25rem; padding: 0.5rem 0.5rem; }
+  .hs-step-num { width: 24px; height: 24px; font-size: 0.75rem; }
+  .hs-step-label { font-size: 0.65rem; }
+  .hs-step-arrow { font-size: 0.85rem; }
+  .hs-success h2 { font-size: 1.4rem; }
+  .hs-success p { font-size: 0.88rem; }
 }
 /* Steps Banner */
 .hs-steps-banner {

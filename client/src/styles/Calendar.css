@@ -241,9 +241,93 @@
 @media (max-width: 768px) {
   .calendar-main {
     grid-template-columns: 1fr;
+    padding: 0 1rem;
+    gap: 1.5rem;
   }
   .calendar-legend {
     gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    font-size: 0.8rem;
+  }
+  .calendar-header-banner {
+    padding: 35px 1.5rem;
+  }
+  .calendar-header-banner h1 {
+    font-size: 1.8rem;
+  }
+  .day-cell {
+    min-height: 44px;
+    padding: 0.3rem 0.15rem;
+  }
+  .day-number {
+    font-size: 0.8rem;
+  }
+  .day-count {
+    font-size: 0.58rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .calendar-main {
+    padding: 0 0.5rem;
+    margin: 1rem auto;
+    gap: 1rem;
+  }
+  .calendar-header-banner {
+    padding: 25px 1rem;
+  }
+  .calendar-header-banner h1 {
+    font-size: 1.4rem;
+  }
+  .calendar-header-banner p {
+    font-size: 0.85rem;
+  }
+  .calendar-legend {
+    gap: 0.5rem;
+    padding: 0.5rem 0.75rem;
+  }
+  .legend-item {
+    font-size: 0.72rem;
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+  }
+  .day-name {
+    font-size: 0.6rem;
+    padding: 0.25rem 0;
+  }
+  .day-cell {
+    min-height: 38px;
+    border-radius: 8px;
+    padding: 0.2rem 0.1rem;
+  }
+  .day-number {
+    font-size: 0.72rem;
+  }
+  .day-count {
+    font-size: 0.5rem;
+  }
+  .calendar-nav h2 {
+    font-size: 1rem;
+  }
+  .nav-btn {
+    width: 32px;
+    height: 32px;
+    font-size: 1.2rem;
+  }
+  .slots-title {
+    font-size: 0.92rem;
+  }
+  .slots-subtitle {
+    font-size: 0.78rem;
+  }
+  .calendar-right {
+    padding: 1rem;
+  }
+  .time-slot-item {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.8rem;
   }
 }
 
@@ -606,22 +690,42 @@
   .cal-modal {
     max-width: 100%;
     border-radius: 16px;
+    max-height: 85vh;
   }
   
   .cal-modal-header {
-    padding: 1.25rem;
+    padding: 1rem;
     border-radius: 16px 16px 0 0;
     flex-wrap: wrap;
+    gap: 0.75rem;
   }
   
   .cal-modal-icon {
-    width: 50px;
-    height: 50px;
-    font-size: 2rem;
+    width: 44px;
+    height: 44px;
+    font-size: 1.6rem;
+  }
+
+  .cal-modal-title-section h2 {
+    font-size: 1.05rem;
   }
   
   .cal-status-badge {
     margin-top: 0.5rem;
+  }
+
+  .cal-modal-body {
+    padding: 1rem;
+  }
+
+  .cal-status-message {
+    font-size: 0.82rem;
+    padding: 0.75rem;
+    gap: 0.5rem;
+  }
+
+  .cal-status-message .status-icon {
+    font-size: 1.2rem;
   }
   
   .cal-detail-grid {
@@ -630,5 +734,17 @@
   
   .cal-detail-item.full {
     grid-column: 1;
+  }
+
+  .cal-detail-section h3 {
+    font-size: 0.82rem;
+  }
+
+  .cal-detail-value {
+    font-size: 0.85rem;
+  }
+
+  .cal-modal-footer {
+    padding: 0.75rem 1rem;
   }
 }

@@ -545,4 +545,52 @@
   .nav-role-badge {
     display: none;
   }
+
+  .role-pin-input {
+    font-size: 1.4rem;
+    letter-spacing: 0.5rem;
+    padding: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .nav-container {
+    padding: 0 0.75rem;
+    height: 56px;
+  }
+
+  .nav-logo {
+    font-size: 0.85rem;
+  }
+
+  .logo-icon {
+    font-size: 1.2rem;
+  }
+
+  .nav-menu {
+    top: 56px;
+  }
+
+  .role-modal-header h2 {
+    font-size: 1.2rem;
+  }
+
+  .role-modal-body {
+    padding: 1rem;
+  }
+
+  .role-pin-input {
+    font-size: 1.2rem;
+    letter-spacing: 0.4rem;
+    padding: 0.75rem;
+  }
+
+  .pin-input {
+    font-size: 1.2rem;
+    letter-spacing: 0.4rem;
+  }
+
+  .pin-modal {
+    padding: 1.5rem 1.25rem;
+  }
 }
