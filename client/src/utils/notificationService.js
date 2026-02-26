@@ -1,63 +1,25 @@
 /**
  * Booking Notification Service
- * Sends email (EmailJS) and SMS (Twilio via Vercel API) on new bookings.
+ * Sends email via Nodemailer + Gmail (Vercel serverless function).
  *
- * ─── SETUP INSTRUCTIONS ───────────────────────────────────
+ * 100% FREE — no third-party services, no paid plans.
+ * Uses your own Gmail account to send notification emails.
  *
- * 1) EMAIL — EmailJS (free, client-side)
- *    a. Sign up at https://www.emailjs.com  (free tier = 200 emails/month)
- *    b. Dashboard → Email Services → Add Service → choose Gmail →
- *       connect your Gmail (mming9368@gmail.com) and note the **Service ID**.
- *    c. Dashboard → Email Templates → Create New →
- *       Set the template body, e.g.:
+ * ─── ONE-TIME SETUP (~2 minutes) ──────────────────────────
  *
- *         Subject: 🔔 New Booking – {{service}} on {{date}}
- *         Body:
- *           Hi Admin,
- *
- *           A new booking has been made:
- *
- *           Client: {{client_name}}
- *           Email: {{client_email}}
- *           Phone: {{client_phone}}
- *           Service: {{service}}
- *           Specialist: {{specialist}}
- *           Date: {{date}}
- *           Time: {{time}}
- *           Type: {{booking_type}}
- *           Notes: {{notes}}
- *
- *           — Nail-Toe-Tail Booking System
- *
- *       Note the **Template ID**.
- *    d. Dashboard → Account → Public Key → copy it.
- *    e. Paste the three values below in EMAILJS_CONFIG.
- *
- * 2) SMS — Twilio (via Vercel serverless function)
- *    a. Sign up at https://www.twilio.com  (free trial gives credits)
- *    b. Get your Account SID, Auth Token, and a Twilio phone number.
- *    c. In your Vercel dashboard → Project Settings → Environment Variables, add:
- *         TWILIO_ACCOUNT_SID  = ACxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
- *         TWILIO_AUTH_TOKEN   = your_auth_token
- *         TWILIO_PHONE_NUMBER = +1xxxxxxxxxx  (your Twilio number)
- *         ADMIN_PHONE_NUMBER  = +639543906942  (your personal number)
- *    d. Redeploy. The /api/send-sms endpoint will use these.
+ * 1. Go to https://myaccount.google.com/security
+ * 2. Enable "2-Step Verification" if not already on
+ * 3. Go to https://myaccount.google.com/apppasswords
+ *    - Select app: "Mail"
+ *    - Select device: "Other" → type "Nail-Toe-Tail"
+ *    - Click Generate → copy the 16-character password
+ * 4. In Vercel dashboard → Project Settings → Environment Variables, add:
+ *      GMAIL_USER      = mming9368@gmail.com
+ *      GMAIL_APP_PASS  = xxxx xxxx xxxx xxxx
+ * 5. Redeploy the project. Done!
  *
  * ───────────────────────────────────────────────────────────
  */
-
-import emailjs from '@emailjs/browser';
-
-// ── EmailJS Configuration ──────────────────────────────────
-// Replace these with your real values from emailjs.com dashboard
-const EMAILJS_CONFIG = {
-  serviceId:  'YOUR_EMAILJS_SERVICE_ID',   // e.g. 'service_abc123'
-  templateId: 'YOUR_EMAILJS_TEMPLATE_ID',  // e.g. 'template_xyz789'
-  publicKey:  'YOUR_EMAILJS_PUBLIC_KEY',    // e.g. 'abcDEF123456'
-};
-
-// Admin email to receive notifications
-const ADMIN_EMAIL = 'mming9368@gmail.com';
 
 // ── Service & Specialist maps (for readable names) ─────────
 const SERVICES = {
@@ -71,45 +33,93 @@ const SPECIALISTS = {
   '2': 'Pangging – Beauty & Spa Specialist',
 };
 
-// ── Format booking data for notifications ──────────────────
-function formatBookingPayload(appointment) {
-  const serviceName = SERVICES[appointment.service] || appointment.service || 'N/A';
+// ── Build a nice HTML email ────────────────────────────────
+function buildEmailHtml(appointment) {
+  const serviceName    = SERVICES[appointment.service] || appointment.service || 'N/A';
   const specialistName = SPECIALISTS[appointment.specialist] || appointment.specialist || 'N/A';
-  const bookingType = appointment.type === 'homeservice' ? 'Home Service' : 'Salon Visit';
+  const bookingType    = appointment.type === 'homeservice' ? 'Home Service' : 'Salon Visit';
+  const total          = appointment.grandTotal ? `₱${appointment.grandTotal}` : 'N/A';
 
-  return {
-    client_name:  appointment.name || 'N/A',
-    client_email: appointment.email || 'N/A',
-    client_phone: appointment.phone || 'N/A',
-    service:      serviceName,
-    specialist:   specialistName,
-    date:         appointment.date || 'N/A',
-    time:         appointment.time || 'N/A',
-    notes:        appointment.notes || 'None',
-    booking_type: bookingType,
-    admin_email:  ADMIN_EMAIL,
-    address:      appointment.address || 'N/A',
-    grand_total:  appointment.grandTotal ? `₱${appointment.grandTotal}` : 'N/A',
-  };
-}
+  const rows = [
+    ['👤 Client',     appointment.name || 'N/A'],
+    ['📧 Email',      appointment.email || 'N/A'],
+    ['📱 Phone',      appointment.phone || 'N/A'],
+    ['💅 Service',    serviceName],
+    ['👩‍🎨 Specialist', specialistName],
+    ['📅 Date',       appointment.date || 'N/A'],
+    ['🕐 Time',       appointment.time || 'N/A'],
+    ['📍 Type',       bookingType],
+  ];
 
-// ── Send Email Notification via EmailJS ────────────────────
-async function sendEmailNotification(appointment) {
-  // Skip if not configured
-  if (EMAILJS_CONFIG.serviceId.startsWith('YOUR_')) {
-    console.warn('[Notification] EmailJS not configured — skipping email.');
-    return { success: false, reason: 'not_configured' };
+  if (bookingType === 'Home Service') {
+    rows.push(['🏠 Address', appointment.address || 'N/A']);
+  }
+  if (total !== 'N/A') {
+    rows.push(['💰 Total', total]);
+  }
+  if (appointment.notes) {
+    rows.push(['📝 Notes', appointment.notes]);
   }
 
+  // Home service sub-services
+  if (appointment.hsServiceDetails) {
+    try {
+      const details = typeof appointment.hsServiceDetails === 'string'
+        ? JSON.parse(appointment.hsServiceDetails)
+        : appointment.hsServiceDetails;
+      if (Array.isArray(details) && details.length) {
+        const list = details.map(d => `${d.name} – ₱${d.price}`).join('<br/>');
+        rows.push(['🛎️ Services', list]);
+      }
+    } catch (_) { /* ignore parse errors */ }
+  }
+
+  const tableRows = rows.map(([label, value]) =>
+    `<tr>
+      <td style="padding:10px 14px;font-weight:600;color:#b8647a;white-space:nowrap;border-bottom:1px solid #f5d5e3;">${label}</td>
+      <td style="padding:10px 14px;color:#333;border-bottom:1px solid #f5d5e3;">${value}</td>
+    </tr>`
+  ).join('');
+
+  return `
+    <div style="font-family:'Segoe UI',Arial,sans-serif;max-width:520px;margin:0 auto;">
+      <div style="background:linear-gradient(135deg,#d98ba4,#e8b3d3);padding:24px;border-radius:14px 14px 0 0;text-align:center;">
+        <h1 style="margin:0;color:#fff;font-size:22px;">🔔 New Booking Received</h1>
+        <p style="margin:6px 0 0;color:#fff;opacity:0.9;font-size:14px;">${serviceName} • ${appointment.date || ''} at ${appointment.time || ''}</p>
+      </div>
+      <div style="background:#fff;padding:0;border:1px solid #f5d5e3;border-top:none;border-radius:0 0 14px 14px;">
+        <table style="width:100%;border-collapse:collapse;">
+          ${tableRows}
+        </table>
+      </div>
+      <p style="text-align:center;color:#999;font-size:12px;margin-top:16px;">
+        — Nail-Toe-Tail Booking System
+      </p>
+    </div>
+  `;
+}
+
+// ── Send Email via Vercel Serverless Function ──────────────
+async function sendEmailNotification(appointment) {
+  const serviceName = SERVICES[appointment.service] || appointment.service || 'Booking';
+
   try {
-    const payload = formatBookingPayload(appointment);
-    const result = await emailjs.send(
-      EMAILJS_CONFIG.serviceId,
-      EMAILJS_CONFIG.templateId,
-      payload,
-      EMAILJS_CONFIG.publicKey,
-    );
-    console.log('[Notification] Email sent:', result.status);
+    const res = await fetch('/api/send-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        subject: `🔔 New Booking – ${serviceName} on ${appointment.date || 'TBD'}`,
+        body:    buildEmailHtml(appointment),
+      }),
+    });
+
+    if (!res.ok) {
+      const errData = await res.json().catch(() => ({}));
+      console.warn('[Notification] Email API error:', errData);
+      return { success: false, error: errData };
+    }
+
+    console.log('[Notification] Email sent successfully');
     return { success: true };
   } catch (err) {
     console.error('[Notification] Email failed:', err);
@@ -117,51 +127,10 @@ async function sendEmailNotification(appointment) {
   }
 }
 
-// ── Send SMS Notification via Vercel API ───────────────────
-async function sendSmsNotification(appointment) {
-  try {
-    const payload = formatBookingPayload(appointment);
-    const smsBody = [
-      `🔔 New Booking!`,
-      `Client: ${payload.client_name}`,
-      `Service: ${payload.service}`,
-      `Date: ${payload.date} at ${payload.time}`,
-      `Type: ${payload.booking_type}`,
-      payload.booking_type === 'Home Service' ? `Address: ${payload.address}` : '',
-      payload.grand_total !== 'N/A' ? `Total: ${payload.grand_total}` : '',
-      `Phone: ${payload.client_phone}`,
-    ].filter(Boolean).join('\n');
-
-    const res = await fetch('/api/send-sms', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ message: smsBody }),
-    });
-
-    if (!res.ok) {
-      const errData = await res.json().catch(() => ({}));
-      console.warn('[Notification] SMS API error:', errData);
-      return { success: false, error: errData };
-    }
-
-    console.log('[Notification] SMS sent successfully');
-    return { success: true };
-  } catch (err) {
-    console.error('[Notification] SMS failed:', err);
-    return { success: false, error: err };
-  }
-}
-
-// ── Main: Send All Notifications ───────────────────────────
+// ── Main: Send Booking Notification ────────────────────────
 export async function sendBookingNotifications(appointment) {
-  // Fire both in parallel — don't block the booking flow
-  const [emailResult, smsResult] = await Promise.allSettled([
-    sendEmailNotification(appointment),
-    sendSmsNotification(appointment),
-  ]);
+  const result = await sendEmailNotification(appointment);
 
-  console.log('[Notification] Results:', {
-    email: emailResult.status === 'fulfilled' ? emailResult.value : emailResult.reason,
-    sms:   smsResult.status === 'fulfilled'   ? smsResult.value   : smsResult.reason,
-  });
+  console.log('[Notification] Result:', result);
+  return result;
 }
