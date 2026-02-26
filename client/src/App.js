@@ -9,6 +9,7 @@ import Calendar from './pages/Calendar';
 import HomeService from './pages/HomeService';
 import Gallery from './pages/Gallery';
 import NotificationBar from './components/NotificationBar';
+import { sendBookingNotifications } from './utils/notificationService';
 import { supabase } from './supabaseClient';
 
 function App() {
@@ -130,6 +131,10 @@ function App() {
       console.error('Error saving appointment:', error);
     } else {
       await fetchAppointments();
+      // Send email & SMS notifications (fire-and-forget, won't block UI)
+      sendBookingNotifications(appointment).catch(err =>
+        console.error('Notification error:', err)
+      );
     }
   };
 
