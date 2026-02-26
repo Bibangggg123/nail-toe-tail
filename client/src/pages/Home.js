@@ -45,7 +45,6 @@ function Home({ setCurrentPage }) {
       <section className="services-preview">
         <div className="services-header-clickable" onClick={() => setCurrentPage('services')}>
           <h2>Our Services</h2>
-          <p className="services-subtitle">Browse our premium nail care offerings • <span className="view-all-link">View All Services →</span></p>
         </div>
         <div className="services-grid-3x3">
           {serviceCards.map((svc, i) => (
