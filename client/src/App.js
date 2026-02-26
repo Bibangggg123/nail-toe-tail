@@ -7,6 +7,7 @@ import Booking from './pages/Booking';
 import Appointments from './pages/Appointments';
 import Calendar from './pages/Calendar';
 import HomeService from './pages/HomeService';
+import Gallery from './pages/Gallery';
 import NotificationBar from './components/NotificationBar';
 import { supabase } from './supabaseClient';
 
@@ -214,6 +215,7 @@ function App() {
             {currentPage === 'appointments' && isAdmin && <Appointments appointments={appointments} deleteAppointment={deleteAppointment} confirmAppointment={confirmAppointment} cancelAppointment={cancelAppointment} fetchAppointments={fetchAppointments} />}
             {currentPage === 'calendar'     && <Calendar appointments={appointments} />}
             {currentPage === 'homeservice'  && <HomeService setCurrentPage={handlePageChange} saveHomeService={saveHomeService} />}
+            {currentPage === 'gallery'      && <Gallery setCurrentPage={handlePageChange} />}
           </>
         )}
       </main>
