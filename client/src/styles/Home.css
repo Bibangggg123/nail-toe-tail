@@ -272,8 +272,9 @@ section h2::after {
 
 .carousel-slide img {
   width: 100%;
-  height: 280px;
+  height: 380px;
   object-fit: cover;
+  object-position: center top;
   border-radius: 12px;
   display: block;
   transition: transform 0.35s ease;
@@ -648,7 +649,7 @@ section h2::after {
   .modal-nav               { width: 44px; height: 44px; font-size: 1.4rem; }
   .modal-nav-prev          { left: 10px; }
   .modal-nav-next          { right: 10px; }
-  .carousel-slide img      { height: 180px; }
+  .carousel-slide img      { height: 280px; }
   .team-grid               { grid-template-columns: 1fr; gap: 1.5rem; max-width: 400px; }
   .team-card-preview       { padding: 2rem 1.5rem; }
   .team-photo              { width: 110px; height: 110px; }
@@ -675,7 +676,7 @@ section h2::after {
   .modal-nav               { width: 36px; height: 36px; font-size: 1.2rem; }
   .modal-nav-prev          { left: 8px; }
   .modal-nav-next          { right: 8px; }
-  .carousel-slide img      { height: 160px; }
+  .carousel-slide img      { height: 220px; }
   .carousel-btn            { width: 36px; height: 36px; font-size: 1.4rem; }
   .team-card-preview       { padding: 1.5rem 1.25rem; }
   .team-photo              { width: 90px; height: 90px; }
